@@ -1,0 +1,270 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "pizza dog",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "OrderPizzaIntent",
+                    "slots": [
+                        {
+                            "name": "topping",
+                            "type": "AMAZON.Food",
+                            "samples": [
+                                "how about {topping}",
+                                "{topping} please",
+                                "{topping}"
+                            ]
+                        },
+                        {
+                            "name": "crust",
+                            "type": "pizza_crust_type",
+                            "samples": [
+                                "{crust}"
+                            ]
+                        },
+                        {
+                            "name": "size",
+                            "type": "pizza_size_type",
+                            "samples": [
+                                "{crust}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "i could go for a {topping} pizza",
+                        "i want a {size} {topping} pizza",
+                        "i want a {crust} {topping} pizza",
+                        "i want a {size} pizza with {topping}",
+                        "can I get a {topping} pizza with {crust} crust",
+                        "I'd like a {crust} pizza with {topping}",
+                        "i'd like a {crust} {topping} pizza",
+                        "order a {topping} pizza",
+                        "i'm hungry for pizza",
+                        "order a pizza"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "pizza_crust_type",
+                    "values": [
+                        {
+                            "id": "ST",
+                            "name": {
+                                "value": "stuffed",
+                                "synonyms": [
+                                    "cheese-filled",
+                                    "cheesy"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "RG",
+                            "name": {
+                                "value": "regular",
+                                "synonyms": [
+                                    "don't care",
+                                    "normal",
+                                    "thick"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "TH",
+                            "name": {
+                                "value": "thin",
+                                "synonyms": [
+                                    "thin-crust"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "pizza_size_type",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "large",
+                                "synonyms": [
+                                    "family-sized",
+                                    "big",
+                                    "huge"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "small"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "OrderPizzaIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "topping",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.931538959864.760389754451"
+                            },
+                            "validations": [
+                                {
+                                    "type": "isInSet",
+                                    "prompt": "Slot.Validation.931538959864.760389754451.444304639856",
+                                    "values": [
+                                        "sausage",
+                                        "pepperoni",
+                                        "cheese"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "crust",
+                            "type": "pizza_crust_type",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.161666237188.92363379735"
+                            },
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.161666237188.92363379735.419498957304"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "size",
+                            "type": "pizza_size_type",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.857927365587.365461079570"
+                            },
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.857927365587.365461079570.262183271289"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.931538959864.760389754451",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What topping would you like?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.931538959864.760389754451.444304639856",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "we offer pepperoni, sausage, or cheese"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "you can ask for pepperoni, sausage, or cheese"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.161666237188.92363379735",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Would you like regular, thin, or stuffed crust?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "And which crust type?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What type of crust would you like?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.161666237188.92363379735.419498957304",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "We've got thin crust, regular, and stuffed crust.  Which would you like?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.857927365587.365461079570",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What size pizza?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.857927365587.365461079570.262183271289",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "We've got thin, regular, and stuffed crust.  Which would you prefer?"
+                    }
+                ]
+            }
+        ]
+    }
+}

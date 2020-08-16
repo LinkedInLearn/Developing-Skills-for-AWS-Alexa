@@ -1,0 +1,71 @@
+const NoIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent';
+    },
+    handle(handlerInput) {
+        
+        var speechText = 'This is the no intent handler';
+        
+         // check state
+        const attributesManager = handlerInput.attributesManager;
+        const sessionAttributes = attributesManager.getSessionAttributes();
+        if (sessionAttributes["state"] === "PROMPT_TO_SAVE_FAVORITE") {
+            speechText = "No problem.  Your pizza is on the way!";
+        } else {
+            speechText = 'This is the no intent handler (no state)';
+        }
+        
+        
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+    }
+};
+
+
+
+const YesIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent';
+    },
+    async handle(handlerInput) {
+        
+        var speechText = '';
+        
+         // 1. Fetch session attributes
+        const attributesManager = handlerInput.attributesManager;
+        const sessionAttributes = attributesManager.getSessionAttributes();
+        
+        // 2. Check state.  Did we just ask the user to save their order?
+        if (sessionAttributes["state"] === "PROMPT_TO_SAVE_FAVORITE") {
+            
+            // 3. Friendly response
+            speechText = "Got it!  Next time just say 'I''ll have the usual!'";
+          
+            // 4. Save their order.  Remember, with persistence, always get 
+            // the entire data set, modify it, then save to avoid overwriting existing data.
+            var persistedJSON = await handlerInput.attributesManager.getPersistentAttributes() 
+
+            persistedJSON["usual"] = sessionAttributes["proposed_usual_intent"] 
+            console.log("SETTING THE USUAL to " + JSON.stringify(persistedJSON["usual"]))
+            
+            // 5. Save persistent attributes.  Remember async/await!
+            await handlerInput.attributesManager.setPersistentAttributes(persistedJSON);
+            await handlerInput.attributesManager.savePersistentAttributes() 
+            
+            
+        } else {
+            speechText = 'This is the yes intent handler (no state)';
+        }
+        
+        
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+    }
+};
+

@@ -1,0 +1,70 @@
+
+const UserDataIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'UserDataIntent';
+    },
+    async handle(handlerInput) {
+
+
+        var speechText = "Here's what I know. "
+        
+        var token = handlerInput.requestEnvelope.context.System.apiAccessToken;
+        var apiBase = handlerInput.requestEnvelope.context.System.apiEndpoint;
+        var deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        var fullNameEndpoint = apiBase + "/v2/accounts/~current/settings/Profile.name"
+        
+        
+        // Try to access the name.
+        var getPermissions = false;
+        var fullName = await fetchProfileData( fullNameEndpoint, token )
+        console.log("fullName response: " + fullName)
+        if ( fullName ) {
+            speechText += " Your name is " + fullName + "!";
+        } else {
+            speechText += " I don’t have permission to read your name. ";
+            getPermissions = true
+            
+        }
+        
+        // Try to access the address
+        var addressEndpoint = apiBase + "/v1/devices/" + deviceId + "/settings/address"
+        var addr = await fetchProfileData( addressEndpoint, token )
+        console.log("addr response: " + JSON.stringify(addr))
+        if ( addr ) {
+            speechText += " And your street is " + addr.addressLine1 + "!";
+        } else {
+            speechText += " I don’t have permission to read your address. ";
+            getPermissions = true
+            
+        }        
+        
+
+        
+        if ( getPermissions ) {
+            
+            speechText += "You'll need to head into the Alexa app or web console to grant permissions. "
+
+            // some example permission strings
+            // from here: https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs/issues/485
+            const FULL_NAME_PERMISSION = "alexa::profile:name:read";
+            const ADDRESS_PERMISSIONS = "read::alexa:device:all:address"
+    
+            return handlerInput.responseBuilder
+                .speak(speechText)
+                .reprompt("")
+                 .withAskForPermissionsConsentCard([FULL_NAME_PERMISSION, ADDRESS_PERMISSIONS])
+                .getResponse();       
+                
+        } else {
+     
+            return handlerInput.responseBuilder         
+                .speak(speechText)
+                .reprompt("")
+                .getResponse();           
+        }
+        
+
+    }
+};
+

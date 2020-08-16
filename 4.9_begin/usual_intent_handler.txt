@@ -1,0 +1,35 @@
+const UsualOrderIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'UsualOrderIntent';
+    },
+    async handle(handlerInput) {
+        
+        var speechText = 'hello';
+        
+        // check if there's a usual in persistence
+        // if so, put it in session and prompt for the order pizza slot.
+        var persistedJSON = await handlerInput.attributesManager.getPersistentAttributes() 
+        
+        if ( persistedJSON["usual"] ){ 
+            
+            return handlerInput.responseBuilder
+                .addDelegateDirective(persistedJSON["usual"]) 
+            .speak("Coming right up!")
+            .getResponse();
+            
+        } else {
+            console.log("No usual pizza set.")
+            speechText += " You don't have a favorite pizza set."
+            
+            return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+        }
+        
+        
+
+    }
+};
+

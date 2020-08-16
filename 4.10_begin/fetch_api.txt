@@ -1,0 +1,25 @@
+/*************** API CALL ****************/
+const fetchProfileData = async function(url, token) {
+    try {
+      const response = await fetch(url,{
+        method: 'get',
+        headers: { 'Accept': 'application/json',
+                    'Authorization' : 'Bearer ' + token
+        }
+      })
+      console.log("status code is " + response.status)
+      if ( response.ok ) {
+          const json = await response.json();
+          console.log(json)
+          return json;
+      } else {
+          return false
+      }
+      
+    } catch (error) {
+      console.log(error)
+      return false;
+    }  
+}
+/*************** API CALL ****************/
+

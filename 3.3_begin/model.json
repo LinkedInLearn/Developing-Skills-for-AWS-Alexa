@@ -1,0 +1,116 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "pizza dog",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hola",
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "OrderPizzaIntent",
+                    "slots": [
+                        {
+                            "name": "topping",
+                            "type": "AMAZON.Food",
+                            "samples": [
+                                "i could go for {topping}",
+                                "{topping}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "order a {topping} pizza",
+                        "i'm hungry",
+                        "order a pizza"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "OrderPizzaIntent",
+                    "delegationStrategy": "ALWAYS",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "topping",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1129966373945.265097604537"
+                            },
+                            "validations": [
+                                {
+                                    "type": "isInSet",
+                                    "prompt": "Slot.Validation.1129966373945.265097604537.189135138902",
+                                    "values": [
+                                        "pepperoni",
+                                        "sausage",
+                                        "cheese",
+                                        "mushroom"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1129966373945.265097604537",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What topping would you like?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.1129966373945.265097604537.189135138902",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "We serve pepperoni, sausage, cheese, or mushroom."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "You can choose pepperoni, sausage, cheese, or mushroom."
+                    }
+                ]
+            }
+        ]
+    }
+}

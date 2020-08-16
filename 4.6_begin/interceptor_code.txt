@@ -1,0 +1,43 @@
+const DialogManagementStateInterceptor = {
+    process(handlerInput) {
+    
+        // 1. grab the current intent
+        const currentIntent = handlerInput.requestEnvelope.request.intent;
+        
+        // 2. Check if the current intent is incomplete.
+        if (handlerInput.requestEnvelope.request.type === "IntentRequest"
+            && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
+                
+            console.log("Request Interceptor: INCOMPLETE INTENT request for " + currentIntent.name)
+            console.log("Request Interceptor: Incoming slot values: " + JSON.stringify(currentIntent.slots))
+            
+            // 3. Prepare to read data saved in the session
+            const attributesManager = handlerInput.attributesManager;
+            const sessionAttributes = attributesManager.getSessionAttributes();
+            
+            // 4. Check to see if we have saved attributes for this intent
+            if (sessionAttributes[currentIntent.name]) {
+                
+                // 5. get the saved slots
+                let savedSlots = sessionAttributes[currentIntent.name].slots;
+                console.log("Request Interceptor: Saved slots are " + JSON.stringify(savedSlots))
+            
+                // 6. restore saved slots, unless some values are being passed in.
+                for (let key in savedSlots) {
+                    if (!currentIntent.slots[key].value && savedSlots[key].value) {
+                        console.log("Request Interceptor:  Restoring " + key + " slot with value " + savedSlots[key].value)
+                        currentIntent.slots[key] = savedSlots[key];
+                    }
+                }    
+            } else {
+                console.log("Request Interceptor: there are NO saved attributes associated with " + currentIntent.name)
+            }
+            
+            // 7. save the values of the current intent.
+            sessionAttributes[currentIntent.name] = currentIntent;
+            attributesManager.setSessionAttributes(sessionAttributes);
+        }
+        
+        
+    }
+};

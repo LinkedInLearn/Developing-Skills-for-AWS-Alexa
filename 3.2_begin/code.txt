@@ -1,0 +1,7 @@
+        var crustSlot = handlerInput.requestEnvelope.request.intent.slots.crust;
+        
+        var crust = crustSlot.value;
+        if ( crustSlot.resolutions ) {
+            crust = crustSlot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+        }
+        
